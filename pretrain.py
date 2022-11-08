@@ -38,23 +38,24 @@ class SurvivalModel(LightningModule):
             if value.requires_grad == True:
                 print("\t", index, name)
 
-    def shared_step(self, batch, batch_idx, split):
+    def shared_step(self, batch, batch_idx):
         img, label = batch
-        scores = self.img_encoder(img.float())
-
+        class_vector = self.img_encoder(img.float())
+        label_tensor = torch.Tensor([label]).long()
         # soft max/cross entropy loss
-
+        ce = nn.CrossEntropyLoss()
+        loss = ce(class_vector, label_tensor)
         return loss
 
     def training_step(self, batch, batch_idx):
-        loss = self.shared_step(batch, batch_idx, "train")
+        loss = self.shared_step(batch, batch_idx)
         self.log("train_loss", loss, prog_bar=True, on_step=True)
         wandb.log({"train loss": loss})
 
         return loss
 
     def validation_step(self, batch, batch_idx):
-        loss = self.shared_step(batch, batch_idx, "val")
+        loss = self.shared_step(batch, batch_idx)
         self.log("val_loss", loss, prog_bar=True)
         wandb.log({"val_loss": loss})
         return loss
