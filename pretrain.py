@@ -39,7 +39,7 @@ class SurvivalModel(LightningModule):
                 print("\t", index, name)
 
     def shared_step(self, batch, batch_idx, split):
-        img, class = batch
+        img, label = batch
         scores = self.img_encoder(img.float())
 
         # soft max/cross entropy loss
