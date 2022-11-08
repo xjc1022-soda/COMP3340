@@ -24,7 +24,7 @@ class SADataModule(LightningDataModule):
         )
 
     def val_dataloader(self):
-        dataset = SADataset(split="valid")
+        dataset = SADataset(split="val")
         return DataLoader(
             dataset, 
             batch_size=self.batch_size,
